@@ -6,6 +6,7 @@ class SmsServiceController {
 
     async processCallback(req, res) {
         const decodedCallback = await this.smsService.decodeCallback(req.body);
+        console.log(decodedCallback);
         if (!decodedCallback) {
             res.send();
             return;
