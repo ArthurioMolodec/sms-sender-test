@@ -15,6 +15,12 @@ class SmsServiceController {
             res.send();
             return;
         }
+
+        if (decodedCallback.phoneNumberFrom === this.smsService.smsSender) {
+            console.error("Tried to answer to itself " + decodedCallback.phoneNumberFrom);
+            return;
+        }
+
         const gptAnswer = await this.chatApiService.getCompletion(decodedCallback.phoneNumberFrom, decodedCallback.messageText);
 
         if (!gptAnswer) {

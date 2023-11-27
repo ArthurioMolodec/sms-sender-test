@@ -6,6 +6,10 @@ class SmsService {
         this.phoneNumberFrom = phoneNumberFrom;
     }
 
+    get smsSender() {
+        return this.phoneNumberFrom;
+    }
+
     async sendSms(destination, content) {
         const response = await axios(
             'https://api.httpsms.com/v1/messages/send', 
