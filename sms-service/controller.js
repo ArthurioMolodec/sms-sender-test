@@ -71,7 +71,7 @@ class SmsServiceController {
 
     async processSendingToUser(projectName, contactsListFileCsv, messageToSendTemplate, lastSentId = null) {
         const db = this.getDb(projectName);
-        if (Date.now() - db.lastSentAt <= 60 * 1000) {
+        if (Date.now() - db.lastSentAt <= 45 * 1000) {
             console.error("Timeout needs to be awaited for");
             return;
         }
