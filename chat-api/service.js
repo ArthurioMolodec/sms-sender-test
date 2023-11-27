@@ -26,6 +26,28 @@ class ChatApiService {
         return response.data.data.answer;
     }
 
+    async appendMessageFromBotToConversation(conversationId, messageText) {
+        const response = await axios(
+            'http://178.18.248.235:7216/api/append-conversation', 
+            { 
+                method: "POST", 
+                data: { 
+                    bot_id: this.bot_id, 
+                    project_id: this.project_id,
+
+                    conversationId: this.conversationIdPrefix + '-' + conversationId.replace(/[^0-9]/g, ''),
+                    messages: [
+                        {
+                            type: 'ai_message',
+                            message: messageText,
+                            messageId: Date.now().toString()
+                        }
+                    ]
+                } 
+            }
+        );
+    }
+
 }
 
 module.exports = {
