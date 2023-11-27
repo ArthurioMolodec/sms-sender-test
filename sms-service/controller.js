@@ -111,7 +111,7 @@ class SmsServiceController {
         try {
             await this.chatApiService.appendMessageFromBotToConversation(phoneNumber, messageTOSend);
             console.log(phoneNumber, messageTOSend);
-            // await this.smsService.sendSms(phoneNumber, messageTOSend);
+            await this.smsService.sendSms(phoneNumber, messageTOSend);
         } catch (ex) {
             console.error(ex);
 
