@@ -36,7 +36,7 @@ app.use((req, res, next) => {
     next();
 });
 
-const chatApiService = new ChatApiService(1, 52);
+const chatApiService = new ChatApiService(1, 53);
 const smsService = new SmsService(process.env.HTTP_SMS_API_KEY, process.env.SENDER_PHONE)
 const smsServiceController = new SmsServiceController(chatApiService, smsService)
 
