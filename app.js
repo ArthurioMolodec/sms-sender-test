@@ -4,6 +4,7 @@ const { SmsServiceController } = require('./sms-service/controller');
 const { ChatApiService } = require('./chat-api/service');
 const { SmsService } = require('./sms-service/service');
 const cron = require('node-cron');
+const fs = require('fs');
 
 require('dotenv').config();
 
@@ -40,7 +41,29 @@ const chatApiService = new ChatApiService(1, 53);
 const smsService = new SmsService(process.env.HTTP_SMS_API_KEY, process.env.SENDER_PHONE)
 const smsServiceController = new SmsServiceController(chatApiService, smsService)
 
-app.post('/callback', (req, res) => smsServiceController.processCallback(req, res));
+const logFile = './log.txt';
+
+async function writeToLog(logText) {
+    const ts = (new Date).toISOString();
+    fs.appendFileSync(logFile, `${ts}\n${logText}\n\n`);
+}
+
+app.post('/callback', async (req, res) => {
+    try {
+        await writeToLog('[CALLBACK]\n' + JSON.stringify(req.body));
+    } catch(ex) {
+        console.error("Error on callback log ", ex);
+        await writeToLog('[ERROR ON CALLBACK LOG]\n' + ex);
+    }
+    try {
+        await smsServiceController.processCallback(req, res)
+    } catch(ex) {
+        console.error("Error on processCallback ", ex);
+        await writeToLog('[ERROR ON PROCESS CALLBACK]\n' + ex);
+    }
+
+    res.send();
+});
 
 
 
@@ -55,7 +78,12 @@ cron.schedule('* * * * *', async () => {
         return;
     }
     lastSendingStarted = true;
-    await smsServiceController.processSendingToUser(process.env.SENDER_TASK_NAME, process.env.CONTACTS_CSV_PATH, messageToSendTemplate);
+    try {
+        await smsServiceController.processSendingToUser(process.env.SENDER_TASK_NAME, process.env.CONTACTS_CSV_PATH, messageToSendTemplate);
+    } catch (ex) {
+        console.error("Error on processSendingToUser ", ex);
+        await writeToLog('[ERROR ON processSendingToUser]\n' + ex);
+    }
     lastSendingStarted = false;
 }, { runOnInit: true })
 

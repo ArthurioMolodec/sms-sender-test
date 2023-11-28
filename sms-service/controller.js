@@ -18,19 +18,18 @@ class SmsServiceController {
 
         if (decodedCallback.phoneNumberFrom === this.smsService.smsSender) {
             console.error("Tried to answer to itself " + decodedCallback.phoneNumberFrom);
-            return;
+            throw new Error("Tried to answer to itself " + decodedCallback.phoneNumberFrom);
         }
 
         if (decodedCallback.messageText === 'Sorry, this service is not available.') {
             console.error("Error message decoded ", decodedCallback);
-            return;
+            throw new Error("Error message decoded " + JSON.stringify(decodedCallback));
         }
 
         const gptAnswer = await this.chatApiService.getCompletion(decodedCallback.phoneNumberFrom, decodedCallback.messageText);
 
         if (!gptAnswer) {
-            res.send();
-            return;
+            throw new Error("Empty answer from GPT");
         }
 
         const postProcessedCallback = gptAnswer.replace(/\[calendly\s+link\]/gmi, 'https://calendly.com/maximmentors');
@@ -101,7 +100,8 @@ class SmsServiceController {
 
         const rowToSend = rowsToSend[0];
 
-        const phoneNumber = "+" + rowToSend['PHONE1'].replace(/\+/g, '');
+        // const phoneNumber = "+" + rowToSend['PHONE1'].replace(/\+/g, '');
+        const phoneNumber = rowToSend['PHONE1'];
 
 
         console.log({ rowToSend, phoneNumber })
@@ -131,6 +131,8 @@ class SmsServiceController {
             db.lastSentId = dbOld.lastSentId;
             db.lastSentAt = dbOld.lastSentAt;
             this.saveDb(projectName, db);
+
+            throw ex;
         }
         
     }
