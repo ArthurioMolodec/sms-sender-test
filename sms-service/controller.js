@@ -21,6 +21,11 @@ class SmsServiceController {
             return;
         }
 
+        if (decodedCallback.messageText === 'Sorry, this service is not available.') {
+            console.error("Error message decoded ", decodedCallback);
+            return;
+        }
+
         const gptAnswer = await this.chatApiService.getCompletion(decodedCallback.phoneNumberFrom, decodedCallback.messageText);
 
         if (!gptAnswer) {
