@@ -18,7 +18,8 @@ class ChatApiService {
                     project_id: this.project_id,
 
                     conversationId: this.conversationIdPrefix + '-' + conversationId.replace(/[^0-9]/g, ''),
-                    prompt
+                    prompt,
+                    conversationName: conversationId,
                 } 
             }
         );
@@ -36,6 +37,7 @@ class ChatApiService {
                     project_id: this.project_id,
 
                     conversationId: this.conversationIdPrefix + '-' + conversationId.replace(/[^0-9]/g, ''),
+                    name: conversationId,
                     messages: [
                         {
                             type: 'ai_message',
