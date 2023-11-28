@@ -81,7 +81,7 @@ class SmsServiceController {
         })
     }
 
-    async processSendingToUser(projectName, contactsListFileCsv, messageToSendTemplate, lastSentId = null) {
+    async processSendingToUser(projectName, contactsListFileCsv, messageToSendTemplate, countryCode = '+1', lastSentId = null) {
         const db = this.getDb(projectName);
         if (Date.now() - db.lastSentAt <= 45 * 1000) {
             console.error("Timeout needs to be awaited for");
@@ -101,7 +101,7 @@ class SmsServiceController {
         const rowToSend = rowsToSend[0];
 
         // const phoneNumber = "+" + rowToSend['PHONE1'].replace(/\+/g, '');
-        const phoneNumber = rowToSend['PHONE1'];
+        const phoneNumber = countryCode + rowToSend['PHONE1'];
 
 
         console.log({ rowToSend, phoneNumber })

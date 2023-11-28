@@ -79,7 +79,12 @@ cron.schedule('* * * * *', async () => {
     }
     lastSendingStarted = true;
     try {
-        await smsServiceController.processSendingToUser(process.env.SENDER_TASK_NAME, process.env.CONTACTS_CSV_PATH, messageToSendTemplate);
+        await smsServiceController.processSendingToUser(
+            process.env.SENDER_TASK_NAME, 
+            process.env.CONTACTS_CSV_PATH, 
+            messageToSendTemplate, 
+            process.env.ADD_COUNTRY_CODE ?? '+1'
+        );
     } catch (ex) {
         console.error("Error on processSendingToUser ", ex);
         await writeToLog('[ERROR ON processSendingToUser]\n' + ex);
