@@ -30,7 +30,7 @@ class SmsServiceController {
 
         const postProcessedCallback = gptAnswer.replace(/\[calendly\s+link\]/gmi, 'https://calendly.com/maximmentors');
 
-        await this.smsService.sendSms(decodedCallback.phoneNumberFrom, gptAnswer)
+        await this.smsService.sendSms(decodedCallback.phoneNumberFrom, postProcessedCallback)
 
         // res.json({ decodedCallback }).send();
         res.send();
