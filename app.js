@@ -72,7 +72,7 @@ const messageToSendTemplate = ({recepientName, managerName, companyName, decease
 
 
 let lastSendingStarted = false;
-cron.schedule('* * * * *', async () => {
+cron.schedule('*/2 * * * *', async () => {
     if (lastSendingStarted) {
         console.error("Worker is busy");
         return;
