@@ -114,7 +114,7 @@ class SmsServiceController {
 
 
         const messageTOSend = messageToSendTemplate({
-            recepientName: (rowToSend['FIRST'] + " " + rowToSend['LAST']).trim(), 
+            recepientName: (rowToSend['FIRST'] /* + " " + rowToSend['LAST'] */).trim(), 
             managerName: "Ashley", 
             companyName: 'Western Probate Solutions', 
             deceasedName: ''
