@@ -120,17 +120,22 @@ class SmsServiceController {
             deceasedName: ''
         });
 
+        let isSent = false;
+
 
         try {
-            await this.chatApiService.appendMessageFromBotToConversation(phoneNumber, messageTOSend);
             console.log(phoneNumber, messageTOSend);
             await this.smsService.sendSms(phoneNumber, messageTOSend);
+            isSent = true;
+            await this.chatApiService.appendMessageFromBotToConversation(phoneNumber, messageTOSend);
         } catch (ex) {
-            console.error(ex);
+            console.error(ex, isSent);
 
-            db.lastSentId = dbOld.lastSentId;
-            db.lastSentAt = dbOld.lastSentAt;
-            this.saveDb(projectName, db);
+            if (!isSent) {
+                db.lastSentId = dbOld.lastSentId;
+                db.lastSentAt = dbOld.lastSentAt;
+                this.saveDb(projectName, db);    
+            }
 
             throw ex;
         }
