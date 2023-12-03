@@ -113,8 +113,11 @@ class SmsServiceController {
         this.saveDb(projectName, db);
 
 
+        const recepientName = (rowToSend['FIRST'] /* + " " + rowToSend['LAST'] */).trim();
+
+
         const messageTOSend = messageToSendTemplate({
-            recepientName: (rowToSend['FIRST'] /* + " " + rowToSend['LAST'] */).trim(), 
+            recepientName: recepientName.length ? recepientName.charAt(0).toUpperCase() + recepientName.slice(1) : '', 
             managerName: "Ashley", 
             companyName: 'Western Probate Solutions', 
             deceasedName: ''
